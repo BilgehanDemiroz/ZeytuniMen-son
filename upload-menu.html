@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Menü Yükleme</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        button { 
+            padding: 10px 15px; 
+            background: #4285f4; 
+            color: white; 
+            border: none; 
+            cursor: pointer;
+        }
+        button:hover { background: #3367d6; }
+    </style>
+</head>
+<body>
+    <h1>Menü Verilerini Yükle</h1>
+    <button id="uploadBtn">Menüyü Firestore'a Yükle</button>
+    <div id="status"></div>
+
+    <script>
+        // Firebase konfigürasyonu
+        const firebaseConfig = {
+            apiKey: "AIzaSyBlrPfoO2I9RfsBtFEw9oOxEhx26d30utw",
+            authDomain: "zeytuni-a01ec.firebaseapp.com",
+            projectId: "zeytuni-a01ec",
+            storageBucket: "zeytuni-a01ec.firebasestorage.app",
+            messagingSenderId: "742432378570",
+            appId: "1:742432378570:web:82035d17ce214fe22bae33"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const menuData = {
+  drinks: {
+    title: "ZEYTUNİ",
+    items: [
+      { name: "rakı tek", price: "300tl" },
+      { name: "rakı karar", price: "350tl" },
+      { name: "rakı duble", price: "400tl" },
+      { name: "beylerbeyi göbek 20cl", price: "1100tl" },
+      { name: "beylerbeyi mavi 20cl", price: "1000tl" },
+      { name: "beylerbeyi göbek 35cl", price: "1500tl" },
+      { name: "beylerbeyi mavi 35cl", price: "1250tl" },
+      { name: "beylerbeyi teragold 35cl", price: "1500tl" },
+      { name: "beylerbeyi göbek 50cl", price: "1950tl" },
+      { name: "beylerbeyi mavi 50cl", price: "1750tl" },
+      { name: "beylerbeyi teragold 50cl", price: "1700tl" },
+      { name: "beylerbeyi göbek 70cl", price: "2500tl" },
+      { name: "beylerbeyi mavi 70cl", price: "2250tl" },
+      { name: "beylerbeyi teragold 70cl", price: "2500tl" },
+      { name: "beylerbeyi incirden 70cl", price: "2500tl" },
+      { name: "beylerbeyi kalecikkarası 70cl", price: "2500tl" },
+      { name: "beylerbeyi margas 70cl", price: "2500tl" },
+      { name: "beylerbeyi göbek 100cl", price: "3250tl" },
+      { name: "beylerbeyi mavi 100cl", price: "3000tl" },
+      { name: "beylerbeyi teragold 100cl", price: "3250tl" },
+      { name: "beylerbeyi incirden 100cl", price: "3250tl" },
+      { name: "beylerbeyi kalecikkarası 100cl", price: "3250tl" },
+      { name: "beylerbeyi margas 100cl", price: "3250tl" },
+      { name: "kadeh şarap", price: "350tl" },
+      { name: "şişe şarap70cl", price: "1500tl" },
+      { name: "şişe şarap 25cl", price: "500tl" },
+      { name: "bira", price: "200tl" },
+      { name: "long drinks", price: "600tl" },
+      { name: "soft içecekler", price: "100tl" }
+    ]
+  },
+  food: {
+    title: "ZEYTUNİ",
+    sections: [
+      {
+        name: "BAŞLANGIÇLAR",
+        items: [
+          { name: "GÜNÜN MEZELERİ", price: "200 tl" },
+          { name: "PEYNIR TABAĞI", price: "400 tl" },
+          { name: "İSLİ MİDYE", price: "500 tl" },
+          { name: "LAKERDA", price: "700 tl" },
+          { name: "DENİZ ÜRÜNÜ SALATASI", price: "650 tl" },
+          { name: "ÇİROZ", price: "600 tl" },
+          { name: "HAMSİ TUZLAMA", price: "500 tl" },
+          { name: "SAGANAKİ", price: "300 tl" }
+        ]
+      },
+      {
+        name: "ARA SICAKLAR",
+        items: [
+          { name: "PAÇANGA", price: "200 tl" },
+          { name: "ARNAVUT CİĞERİ", price: "500 tl" },
+          { name: "PATATES CİPSİ", price: "200 tl" },
+          { name: "SİGARA BÖREĞİ", price: "200 tl" },
+          { name: "KALAMAR", price: "600 tl" },
+          { name: "KARİDES", price: "600 tl" },
+          { name: "MANTAR DOLMA", price: "400 tl" }
+        ]
+      },
+      {
+        name: "ANA YEMEKLER",
+        items: [
+          { name: "KÖFTE", price: "500 tl" },
+          { name: "ISOSLU IZGARA TAVUK", price: "850 tl" },
+          { name: "KUZU LOKUM", price: "750 tl" },
+          { name: "KUZU ŞİŞ", price: "750 tl" },
+          { name: "DEMİ GLACE SOSLU ET", price: "900 tl" },
+          { name: "DANA BONFİLE", price: "850 tl" },
+          { name: "ANTRİKOT", price: "850 tl" },
+          { name: "KUZU PİRZOLA", price: "850 tl" },
+          { name: "KASAP SUCUK", price: "500 tl" },
+          { name: "YAPRAK CİĞER", price: "500 tl" },
+          { name: "BÖBREK", price: "500 tl" },
+          { name: "KOKOREÇ", price: "500 tl" },
+          { name: "TEREYAĞLI DİL", price: "500 tl" },
+          { name: "SOĞUŞ DİL", price: "500 tl" },
+          { name: "BEYİN", price: "450 tl" },
+          { name: "BARBUN", price: "700 tl" },
+          { name: "LEVREK FILETO", price: "750 tl" },
+          { name: "ÇİPURA", price: "750 tl" }
+        ]
+      },
+      {
+        name: "SALATALAR",
+        items: [
+          { name: "MEVSİM SALATA", price: "350 tl" },
+          { name: "ROKA SALATA", price: "350 tl" },
+          { name: "KAŞIK SALATA", price: "350 tl" }
+        ]
+      },
+      {
+        name: "MEYVE-TATLI",
+        items: [
+          { name: "KAVUN DİLİM", price: "100 tl" },
+          { name: "KARPUZ DİLİM", price: "100 tl" },
+          { name: "MEYVE TABAĞI 200 300", price: "500 tl" },
+          { name: "GÜNÜN TATLISI", price: "200 tl" }
+        ]
+      }
+    ]
+  }
+};
+
+        document.getElementById('uploadBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('uploadBtn');
+            const statusDiv = document.getElementById('status');
+            try {
+                btn.disabled = true;
+                statusDiv.textContent = "Veriler yükleniyor...";
+                statusDiv.style.color = "blue";
+
+                console.log("Veri yükleme başladı...");
+
+                // Önce eski verileri sil
+                const snapshot = await db.collection('products').get();
+                const batch = db.batch();
+                snapshot.forEach(doc => batch.delete(doc.ref));
+                await batch.commit();
+                console.log("Eski ürünler silindi.");
+
+                // İçecekleri yükle
+                for (const item of menuData.drinks.items) {
+                    await db.collection('products').add({
+                        name: item.name,
+                        price: item.price,
+                        category: "drinks",
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+                console.log("İçecekler yüklendi.");
+
+                // Yiyecekleri yükle
+                for (const section of menuData.food.sections) {
+                    for (const item of section.items) {
+                        await db.collection('products').add({
+                            name: item.name,
+                            price: item.portion ? item.portion : item.price,
+                            category: section.name.toLowerCase(),
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
+                }
+                console.log("Yiyecekler yüklendi.");
+
+                statusDiv.textContent = "✔ Menü başarıyla yüklendi!";
+                statusDiv.style.color = "green";
+                alert("Menü başarıyla yüklendi!");
+            } catch (error) {
+                console.error("Hata:", error);
+                statusDiv.textContent = `✖ Hata: ${error.message}`;
+                statusDiv.style.color = "red";
+                alert("Hata oluştu: " + error.message);
+            } finally {
+                btn.disabled = false;
+            }
+        });
+
+        // Firestore bağlantı testi
+        db.collection("test").doc("test").get()
+            .then(() => console.log("Firestore bağlantısı başarılı."))
+            .catch(err => console.error("Firestore erişim hatası:", err));
+    </script>
+</body>
+</html>
