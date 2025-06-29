@@ -60,6 +60,16 @@ document.addEventListener('DOMContentLoaded', () => {
       adminPanel.style.display = 'none';
     }
   });
+   auth.onAuthStateChanged(user => {
+    if (user && user.email === 'sarikayasudenaz59@gmail.com') {
+      loginSection.style.display = 'none';
+      adminPanel.style.display = 'block';
+      loadProducts();
+    } else {
+      loginSection.style.display = 'block';
+      adminPanel.style.display = 'none';
+    }
+  });
 
   // Giriş
   loginForm.addEventListener('submit', async e => {
